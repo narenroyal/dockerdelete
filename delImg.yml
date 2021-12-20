@@ -1,0 +1,24 @@
+- job: DockerCleanBuildAndTest
+    displayName: Docker Build and Test
+    workspace:
+      clean: all
+    steps:
+      - task: DockerCompose@0
+        displayName: Clean
+        inputs:
+          containerregistrytype: 'Container Registry'
+          dockerRegistryEndpoint: ${{ variables['container-registry-name'] }}
+          dockerComposeFile: '**/docker-compose.yml'
+          action: 'Run a Docker Compose command'
+          dockerComposeCommand: down
+          detached: false
+
+      - task: DockerCompose@0
+        displayName: Run Tests
+        inputs:
+          containerregistrytype: 'Container Registry'
+          dockerRegistryEndpoint: ${{ variables['container-registry-name'] }}
+          dockerComposeFile: '**/docker-compose.yml'
+          action: 'Run a Docker Compose command'
+          dockerComposeCommand: 'run all-tests'
+          detached: false
